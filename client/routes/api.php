@@ -1,8 +1,36 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CorporateController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// Public routes
+Route::post('/user/register', [UserController::class, 'register']);
+Route::post('/auth/login', [AuthController::class, 'login'])->name('login');
+
+// Protected routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::delete('/auth/token-revoke', [AuthController::class, 'tokenRevoke']);
+    Route::put('/auth/token-refresh', [AuthController::class, 'tokenRefresh']);
+
+    // Get Logged In User
+    Route::get('/user', [AuthController::class, 'getLoggedInUser']);
+
+    // Corporate Routes
+    Route::post('/corporate', [CorporateController::class, 'store']);
+    Route::get('/corporate', [CorporateController::class, 'index']);
+    Route::get('/corporate/{id}', [CorporateController::class, 'show']);
+
+    // Vendor Routes
+    Route::post('/corporate/vendor', [VendorController::class, 'store']);
+    Route::get('/corporate/vendor', [VendorController::class, 'index']);
+    Route::put('/corporate/vendor/{id}', [VendorController::class, 'update']);
+    
+    // Invoice Routes
+    // Route::post('/corporate/{corp_id}/vendor/{vendor_id}/invoice', [InvoiceController::class, 'store']);
+    // Route::get('/corporate/{corp_id}/vendor/{vendor_id}/invoice', [InvoiceController::class, 'index']);
+    // Route::get('/corporate/{corp_id}/vendor/{vendor_id}/invoice/{invoice_id}', [InvoiceController::class, 'show']);
+    // Route::put('/corporate/{corp_id}/vendor/{vendor_id}/invoice/{invoice_id}', [InvoiceController::class, 'update']);
+});
