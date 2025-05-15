@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CorporateController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
@@ -18,19 +19,21 @@ Route::middleware('auth:sanctum')->group(function () {
     // Get Logged In User
     Route::get('/user', [AuthController::class, 'getLoggedInUser']);
 
+    // Vendor Routes
+    Route::prefix('/corporate/vendor')->group(function () {
+        Route::post('/', [VendorController::class, 'store']);
+        Route::get('/', [VendorController::class, 'index']);
+        Route::put('/{id}', [VendorController::class, 'update']);
+    });
+
     // Corporate Routes
     Route::post('/corporate', [CorporateController::class, 'store']);
     Route::get('/corporate', [CorporateController::class, 'index']);
     Route::get('/corporate/{id}', [CorporateController::class, 'show']);
 
-    // Vendor Routes
-    Route::post('/corporate/vendor', [VendorController::class, 'store']);
-    Route::get('/corporate/vendor', [VendorController::class, 'index']);
-    Route::put('/corporate/vendor/{id}', [VendorController::class, 'update']);
-    
     // Invoice Routes
-    // Route::post('/corporate/{corp_id}/vendor/{vendor_id}/invoice', [InvoiceController::class, 'store']);
-    // Route::get('/corporate/{corp_id}/vendor/{vendor_id}/invoice', [InvoiceController::class, 'index']);
-    // Route::get('/corporate/{corp_id}/vendor/{vendor_id}/invoice/{invoice_id}', [InvoiceController::class, 'show']);
-    // Route::put('/corporate/{corp_id}/vendor/{vendor_id}/invoice/{invoice_id}', [InvoiceController::class, 'update']);
+    Route::post('/corporate/{corp_id}/vendor/{vendor_id}/invoice', [InvoiceController::class, 'store']);
+    Route::get('/corporate/{corp_id}/vendor/{vendor_id}/invoice', [InvoiceController::class, 'index']);
+    Route::get('/corporate/{corp_id}/vendor/{vendor_id}/invoice/{invoice_id}', [InvoiceController::class, 'show']);
+    Route::put('/corporate/{corp_id}/vendor/{vendor_id}/invoice/{invoice_id}', [InvoiceController::class, 'update']);
 });

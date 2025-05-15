@@ -61,7 +61,7 @@ class CorporateController extends Controller
 
             if (empty($corporates)) {
                 return response()->json([
-                    'status' => 'failed',
+                    'status' => 'error',
                     'message' => 'No corporates found'], 404);
             }
 
