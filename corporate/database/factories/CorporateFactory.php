@@ -18,7 +18,7 @@ class CorporateFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'email' => $this->fake()->unique()->safeEmail(),
+            'email' => fake()->unique()->safeEmail(),
             'phone' => $this->faker->phoneNumber(),
             'address' => $this->faker->text(),
         ];
