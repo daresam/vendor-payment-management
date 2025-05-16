@@ -29,7 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Corporate Routes
     Route::post('/corporate', [CorporateController::class, 'store']);
-    // Route::get('/corporate', [CorporateController::class, 'index']);
+    Route::get('/corporate', [CorporateController::class, 'index']);
     Route::get('/corporate/{id}', [CorporateController::class, 'show']);
 
     // Invoice Routes

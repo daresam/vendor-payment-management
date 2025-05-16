@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class InterServiceTokensController extends Controller
+class CorporateServiceController extends Controller
 {
     //
 }
