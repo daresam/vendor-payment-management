@@ -25,7 +25,15 @@ class VendorServiceController extends Controller
                 'Authorization' => 'Bearer '.$this->getTokens()->token,
             ])->get(env('VENDOR_SERVICE_URL').'/corporate/vendor');
 
-            return response()->json($response->json());
+            $data = [
+                'status' => 'success',
+                'message' => 'Vendors fetched successfully',
+                'data' => [
+                    'vendors' => $response->json(),
+                ],
+            ];
+
+            return response()->json($data);
         } catch (\Illuminate\Http\Client\RequestException $e) {
             return response()->json(['error' => 'Failed to connect', 'exception' => $e->getMessage()], 500);
         }
@@ -47,7 +55,15 @@ class VendorServiceController extends Controller
             ])->put(env('VENDOR_SERVICE_URL') . '/corporate/vendor/' . $id, $request->all());
 
 
-            return response()->json($response->json());
+            $data = [
+                'status' => 'success',
+                'message' => 'Vendor updated successfully',
+                'data' => [
+                    'vendors' => $response->json(),
+                ],
+            ];
+
+            return response()->json($data);
         } catch (\Illuminate\Http\Client\RequestException $e) {
             return response()->json(['error' => 'Failed to connect', 'exception' => $e->getMessage()], 500);
         }
@@ -68,7 +84,15 @@ class VendorServiceController extends Controller
                 'Authorization' => 'Bearer '.$this->getTokens()->token,
             ])->post(env('VENDOR_SERVICE_URL').'/corporate/vendor', $request->all());
 
-            return response()->json($response->json());
+            $data = [
+                'status' => 'success',
+                'message' => 'Vendor created successfully',
+                'data' => [
+                    'vendors' => $response->json(),
+                ],
+            ];
+
+            return response()->json($data, 201);
         } catch (\Illuminate\Http\Client\RequestException $e) {
             return response()->json(['error' => 'Failed to connect', 'exception' => $e->getMessage()], 500);
         }

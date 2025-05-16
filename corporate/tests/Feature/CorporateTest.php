@@ -8,7 +8,6 @@ use Laravel\Sanctum\Sanctum;
 uses(RefreshDatabase::class);
 
 
-// Corporate Tests
 it('can create a corporate', function () {
     $data = [
         'name' => 'Test Corp',

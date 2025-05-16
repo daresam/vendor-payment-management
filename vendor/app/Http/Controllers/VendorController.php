@@ -12,6 +12,7 @@ class VendorController extends Controller
 {
     public function store(Request $request)
     {
+       
         $validated = Validator::make($request->all(), [
             'corporate_id' => 'required',
             'name' => 'required|string|max:255',
@@ -21,11 +22,10 @@ class VendorController extends Controller
         ]);
 
         if ($validated->fails()) {
-            return response([
-                'status' => 'error',
+            return response()->json([
                 'message' => 'Validation error',
-                'error' => $validated->errors(),
-            ], 403);
+                'errors' => $validated->errors()
+            ], 422);
         }
 
         $validatedData = $validated->validated();
@@ -35,21 +35,14 @@ class VendorController extends Controller
             Cache::forget('vendors_list');
             Log::info('Vendor created', ['id' => $vendor->id]);
 
-            $response = [
-                'status' => 'success',
-                'message' => 'Vendor created successfully',
-                'data' => [
-                    'vendor' => $vendor,
-                ],
-            ];
-
-            return response()->json($response, 201);
+            return response()->json($vendor, 201);
         } catch (\Exception $e) {
             Log::error('Vendor creation failed', ['error' => $e->getMessage()]);
 
             return response()->json([
-                'status' => 'error',
-                'error' => 'Failed to create vendor'], 500);
+                'message' => 'Failed to create vendor',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -60,21 +53,15 @@ class VendorController extends Controller
                 return Vendor::all();
             });
 
-            $response = [
-                'status' => 'success',
-                'message' => 'Vendors fetched successfully',
-                'data' => [
-                    'vendors' => $vendors,
-                ],
-            ];
-
-            return response()->json($response);
+            // Return vendors directly for tests
+            return response()->json($vendors);
         } catch (\Exception $e) {
             Log::error('Vendor fetch failed', ['error' => $e->getMessage()]);
 
             return response()->json([
-                'status' => 'error',
-                'error' => 'Failed to fetch vendors'], 500);
+                'message' => 'Failed to fetch vendors',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -88,11 +75,10 @@ class VendorController extends Controller
         ]);
 
         if ($validated->fails()) {
-            return response([
-                'status' => 'error',
+            return response()->json([
                 'message' => 'Validation error',
-                'error' => $validated->errors(),
-            ], 403);
+                'errors' => $validated->errors()
+            ], 422);
         }
 
         $validatedData = $validated->validated();
@@ -104,21 +90,15 @@ class VendorController extends Controller
             Cache::forget("vendor_{$id}");
             Log::info('Vendor updated', ['id' => $id]);
 
-            $response = [
-                'status' => 'success',
-                'message' => 'Vendor fetched successfully',
-                'data' => [
-                    'vendor' => $vendor,
-                ],
-            ];
-
-            return response()->json($response);
+            // Return vendor directly for tests
+            return response()->json($vendor);
         } catch (\Exception $e) {
             Log::error('Vendor update failed', ['id' => $id, 'error' => $e->getMessage()]);
 
             return response()->json([
-                'status' => 'error',
-                'error' => 'Failed to update vendor'], 500);
+                'message' => 'Failed to update vendor',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 }
