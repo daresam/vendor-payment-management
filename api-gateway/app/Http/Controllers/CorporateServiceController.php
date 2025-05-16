@@ -25,7 +25,16 @@ class CorporateServiceController extends Controller
                 'Authorization' => 'Bearer '.$this->getTokens()->token,
             ])->get(env('CORPORATE_SERVICE_URL').'/corporate');
 
-            return response()->json($response->json());
+            $data = [
+                'status' => 'success',
+                'message' => 'Corporates fetched successfully',
+                'data' => [
+                    'corporates' => $response->json(),
+                ],
+            ];
+
+            return response()->json($data);
+
         } catch (\Illuminate\Http\Client\RequestException $e) {
             return response()->json(['error' => 'Failed to connect', 'exception' => $e->getMessage()], 500);
         }
@@ -46,7 +55,15 @@ class CorporateServiceController extends Controller
                 'Authorization' => 'Bearer '.$this->getTokens()->token,
             ])->get(env('CORPORATE_SERVICE_URL').'/corporate/'.$id);
 
-            return response()->json($response->json());
+            $data = [
+                'status' => 'success',
+                'message' => 'Corporate fetched successfully',
+                'data' => [
+                    'corporate' => $response->json(),
+                ],
+            ];
+
+            return response()->json($data);
         } catch (\Illuminate\Http\Client\RequestException $e) {
             return response()->json(['error' => 'Failed to connect', 'exception' => $e->getMessage()], 500);
         }
@@ -67,7 +84,15 @@ class CorporateServiceController extends Controller
                 'Authorization' => 'Bearer ' . $this->getTokens()->token,
             ])->post(env('CORPORATE_SERVICE_URL') . '/corporate', $request->all());
 
-            return response()->json($response->json());
+            $data = [
+                'status' => 'success',
+                'message' => 'Corporate created successfully',
+                'data' => [
+                    'corporates' => $response->json(),
+                ],
+            ];
+
+            return response()->json($data);
         } catch (\Illuminate\Http\Client\RequestException $e) {
             return response()->json(['error' => 'Failed to connect', 'exception' => $e->getMessage()], 500);
         }

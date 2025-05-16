@@ -21,11 +21,10 @@ class CorporateController extends Controller
         ]);
 
         if ($validated->fails()) {
-            return response([
-                'status' => 'error',
-                'message' => 'Validation error',
-                'error' =>  $validated->errors(),
-            ], 403);
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $validated->errors()
+            ], 422);
         }
 
         try {
@@ -33,15 +32,7 @@ class CorporateController extends Controller
             Cache::forget('corporates_list');
             Log::info('Corporate created', ['id' => $corporate->id]);
 
-            $response = [
-                'status' => 'success',
-                'message' => 'Corporate created successfully',
-                'data' => [
-                    'corporate' => $corporate,
-                ],
-            ];
-
-            return response()->json($response, 201);
+            return response()->json($corporate, 201);
 
         } catch (\Exception $e) {
             Log::error('Corporate creation failed', ['error' => $e->getMessage()]);
@@ -65,15 +56,7 @@ class CorporateController extends Controller
                     'message' => 'No corporates found'], 404);
             }
 
-            $response = [
-                'status' => 'success',
-                'message' => 'Corporates fetched successfully',
-                'data' => [
-                    'corporates' => $corporates,
-                ],
-            ];
-
-            return response()->json($response);
+            return response()->json($corporates);
         } catch (\Exception $e) {
             Log::error('Corporate fetch failed', ['error' => $e->getMessage()]);
 
@@ -90,15 +73,7 @@ class CorporateController extends Controller
                 return Corporate::findOrFail($id);
             });
 
-            $response = [
-                'status' => 'success',
-                'message' => 'Corporate fetched successfully',
-                'data' => [
-                    'corporate' => $corporate,
-                ],
-            ];
-
-            return response()->json($response);
+            return response()->json($corporate);
         } catch (\Exception $e) {
             Log::error('Corporate fetch failed', ['id' => $id, 'error' => $e->getMessage()]);
 
