@@ -25,7 +25,15 @@ class InvoiceServiceController extends Controller
                 'Authorization' => 'Bearer '.$this->getTokens()->token,
             ])->get(env('INVOICE_SERVICE_URL') . '/corporate/' .$corp_id . '/vendor/' . $vendor_id . '/invoice');
 
-            return response()->json($response->json());
+            $data = [
+                'status' => 'success',
+                'message' => 'Invoices fetched successfully',
+                'data' => [
+                    'invoices' => $response->json(),
+                ],
+            ];
+
+            return response()->json($data);
         } catch (\Illuminate\Http\Client\RequestException $e) {
             return response()->json(['error' => 'Failed to connect', 'exception' => $e->getMessage()], 500);
         }
@@ -46,7 +54,15 @@ class InvoiceServiceController extends Controller
                 'Authorization' => 'Bearer '.$this->getTokens()->token,
             ])->put(env('INVOICE_SERVICE_URL') . '/corporate/' . $corp_id . '/vendor/' . $vendor_id . '/invoice/' . $invoice_id, $request->all());
 
-            return response()->json($response->json());
+            $data = [
+                'status' => 'success',
+                'message' => 'Invoice updated successfully',
+                'data' => [
+                    'invoice' => $response->json(),
+                ],
+            ];
+
+            return response()->json($data);
         } catch (\Illuminate\Http\Client\RequestException $e) {
             return response()->json(['error' => 'Failed to connect', 'exception' => $e->getMessage()], 500);
         }
@@ -67,7 +83,15 @@ class InvoiceServiceController extends Controller
                 'Authorization' => 'Bearer '.$this->getTokens()->token,
             ])->post(env('INVOICE_SERVICE_URL') . '/corporate/' .$corp_id . '/vendor/' . $vendor_id . '/invoice', $request->all());
 
-            return response()->json($response->json());
+            $data = [
+                'status' => 'success',
+                'message' => 'Invoice created successfully',
+                'data' => [
+                    'invoice' => $response->json(),
+                ],
+            ];
+
+            return response()->json($data, 201);
         } catch (\Illuminate\Http\Client\RequestException $e) {
             return response()->json(['error' => 'Failed to connect', 'exception' => $e->getMessage()], 500);
         }
@@ -88,7 +112,15 @@ class InvoiceServiceController extends Controller
                 'Authorization' => 'Bearer '.$this->getTokens()->token,
             ])->get(env('INVOICE_SERVICE_URL') . '/corporate/' . $corp_id . '/vendor/' . $vendor_id . '/invoice/' . $invoice_id);
 
-            return response()->json($response->json());
+            $data = [
+                'status' => 'success',
+                'message' => 'Invoice fetched successfully',
+                'data' => [
+                    'invoice' => $response->json(),
+                ],
+            ];
+
+            return response()->json($data);
         } catch (\Illuminate\Http\Client\RequestException $e) {
             return response()->json(['error' => 'Failed to connect', 'exception' => $e->getMessage()], 500);
         }
