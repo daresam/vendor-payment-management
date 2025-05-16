@@ -12,9 +12,9 @@ class CorporateServiceController extends Controller
     public function index(Request $request)
     {
         try {
-            $response = $this->getTokens();
+            $tokens = $this->getTokens();
 
-            if (! $response) {
+            if (!$tokens) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Failed to get tokens',

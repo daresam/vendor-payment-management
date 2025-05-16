@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CorporateServiceController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VendorServiceController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
@@ -17,12 +18,12 @@ Route::middleware('auth:sanctum')->group(function () {
     // Get Logged In User
     Route::get('/user', [AuthController::class, 'getLoggedInUser']);
 
-    // // Vendor Routes
-    // Route::prefix('/corporate/vendor')->group(function () {
-    //     Route::post('/', [VendorController::class, 'store']);
-    //     Route::get('/', [VendorController::class, 'index']);
-    //     Route::put('/{id}', [VendorController::class, 'update']);
-    // });
+    // Vendor Routes
+    Route::prefix('/corporate/vendor')->group(function () {
+        Route::post('/', [VendorServiceController::class, 'store']);
+        Route::get('/', [VendorServiceController::class, 'index']);
+        Route::put('/{id}', [VendorServiceController::class, 'update']);
+    });
 
     // Corporate Routes
     Route::post('/corporate', [CorporateServiceController::class, 'store']);
