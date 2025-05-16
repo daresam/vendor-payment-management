@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 // Public routes
 Route::post('/user/register', [UserController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'login'])->name('login');
+Route::get('/corporate', [CorporateController::class, 'index']);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -28,7 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Corporate Routes
     Route::post('/corporate', [CorporateController::class, 'store']);
-    Route::get('/corporate', [CorporateController::class, 'index']);
+    // Route::get('/corporate', [CorporateController::class, 'index']);
     Route::get('/corporate/{id}', [CorporateController::class, 'show']);
 
     // Invoice Routes
