@@ -18,8 +18,9 @@ class ServiceAccountController extends Controller
 
         if ($validate->fails()) {
             return response([
+                'status' => 'error',
                 'message' => 'Validation error',
-                'errors' => $validate->errors()
+                'error' => $validate->errors()
             ], 403);
         }
 
@@ -29,6 +30,7 @@ class ServiceAccountController extends Controller
 
         if (!$serviceAccount) {
             return response([
+                'status' => 'error',
                 'message' => 'Invalid service id or secret'
             ], 403);
         }
