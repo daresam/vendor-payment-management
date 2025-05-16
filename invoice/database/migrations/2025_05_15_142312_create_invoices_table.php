@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('corporate_id')->constrained()->onDelete('cascade');
-            $table->foreignId('vendor_id')->constrained()->onDelete('cascade');
+            $table->integer('corporate_id');
+            $table->integer('vendor_id');
             $table->string('invoice_number')->unique();
             $table->decimal('amount', 10, 2);
             $table->enum('status', ['OPEN', 'CLOSED'])->default('OPEN');

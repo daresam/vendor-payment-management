@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CorporateServiceController;
+use App\Http\Controllers\InvoiceServiceController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorServiceController;
 use Illuminate\Support\Facades\Route;
@@ -30,9 +31,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/corporate', [CorporateServiceController::class, 'index']);
     Route::get('/corporate/{id}', [CorporateServiceController::class, 'show']);
 
-    // // Invoice Routes
-    // Route::post('/corporate/{corp_id}/vendor/{vendor_id}/invoice', [InvoiceController::class, 'store']);
-    // Route::get('/corporate/{corp_id}/vendor/{vendor_id}/invoice', [InvoiceController::class, 'index']);
-    // Route::get('/corporate/{corp_id}/vendor/{vendor_id}/invoice/{invoice_id}', [InvoiceController::class, 'show']);
-    // Route::put('/corporate/{corp_id}/vendor/{vendor_id}/invoice/{invoice_id}', [InvoiceController::class, 'update']);
+    // Invoice Routes
+    Route::post('/corporate/{corp_id}/vendor/{vendor_id}/invoice', [InvoiceServiceController::class, 'store']);
+    Route::get('/corporate/{corp_id}/vendor/{vendor_id}/invoice', [InvoiceServiceController::class, 'index']);
+    Route::get('/corporate/{corp_id}/vendor/{vendor_id}/invoice/{invoice_id}', [InvoiceServiceController::class, 'show']);
+    Route::put('/corporate/{corp_id}/vendor/{vendor_id}/invoice/{invoice_id}', [InvoiceServiceController::class, 'update']);
 });
