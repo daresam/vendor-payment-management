@@ -61,7 +61,7 @@ class CorporateController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
-                'address' => $request->name,
+                'address' => $request->address,
             ])->object();
 
             $data = $response->status;

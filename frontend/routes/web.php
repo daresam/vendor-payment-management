@@ -2,9 +2,10 @@
 
 use App\Http\Controllers\CorporateController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
 
-Route::redirect('/', '/corporates');
+Route::get('/', fn() => view('welcome'));
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -17,5 +18,6 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('corporates', CorporateController::class);
+Route::resource('vendors', VendorController::class);
 
 // require __DIR__.'/auth.php';
