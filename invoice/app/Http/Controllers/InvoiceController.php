@@ -12,7 +12,6 @@ class InvoiceController extends Controller
 {
     public function store(Request $request, $corp_id, $vendor_id)
     {
-        // Use Laravel's built-in request validation
         $validatedData = $request->validate([
             'amount' => 'required|numeric|min:0',
             'due_date' => 'required|date|after:today',
@@ -90,7 +89,6 @@ class InvoiceController extends Controller
 
     public function update(Request $request, $corp_id, $vendor_id, $invoice_id)
     {
-        // Use Laravel's built-in request validation
         $validatedData = $request->validate([
             'status' => 'required|in:OPEN,CLOSED',
         ]);
