@@ -53,7 +53,7 @@ To start the microservice application:
 1. Unzip the folder **vendor-payment-management.zip**.
 2. Navigate to each of the following directories(api-gateway, corporate, vendor and invoice )
 3. Run `./vendor/bin/sail up -d` to start the containers for each services.
-4. Navigate toStart RabbitMQ by running `docker compose up`.
+4. Navigate to Start rabbitmq by running `docker compose up`.
 5. Test the application using Postman, and connect to the database using your preferred tool (ensure the correct database port is used).
 
 ## To start the frontend application:
