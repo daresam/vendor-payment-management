@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Manage Vendors
+            Manage Invoices
         </h2>
     </x-slot>
 
@@ -10,30 +10,30 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
 
                 <div class="mt-2 p-5 flex flex-row-reverse">
-                    <a href="{{ route('vendors.create') }}"
+                    <a href="{{ route('invoices.create') }}"
                         class="bg-gray-50 dark:bg-gray-700 text-white px-4 py-2 rounded">Create
-                        Vendor</a>
+                        Invoice</a>
                 </div>
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="px-6 py-3">
-                                    Name
+                                    Invoice Number
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     <div class="flex items-center">
-                                        Email
+                                        Amount
                                     </div>
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     <div class="flex items-center">
-                                        Phone Number
+                                        Status
                                     </div>
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     <div class="flex items-center">
-                                        Date Created
+                                        Due Date 
                                     </div>
                                 </th>
                                 <th scope="col" class="px-6 py-3">
@@ -41,36 +41,36 @@
                                         Actions
                                     </div>
                                 </th>
-                                <th scope="col" class="px-6 py-3">
+                                {{-- <th scope="col" class="px-6 py-3">
                                     <div class="flex items-center">
-                                        
+
                                     </div>
-                                </th>
-                                
+                                </th> --}}
+
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($vendors as $vendor)
+                            @foreach($invoices as $invoice)
                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
                                     <th scope="row"
                                         class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{ $vendor->name }}
+                                        {{ $invoice->invoice_number }}
                                     </th>
                                     <td class="px-6 py-4">
-                                        {{ $vendor->email }}
+                                        {{ $invoice->amount }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $vendor->phone }}
+                                        {{ $invoice->status }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ \Carbon\Carbon::parse($vendor->created_at)->format('D, d M Y h:i A')  }}
+                                        {{ \Carbon\Carbon::parse($invoice->due_date)->format('D, d M Y h:i A')  }}
                                     </td>
-                                    <td class=" py-4 ">
-                                        <a href="{{ route('vendors.show', $vendor->id) }}"
-                                            class="font-medium text-orange-600 dark:text-orange-500 hover:underline">Manage Invoice</a>
-                                    </td>
+                                    {{-- <td class="px-8 py-4 text-right">
+                                        <a href="{{ route('invoices.show', $invoice->id) }}"
+                                            class="font-medium text-orange-600 dark:text-orange-500 hover:underline">View</a>
+                                    </td> --}}
                                     <td class="px-8 py-4 text-right">
-                                        <a href="{{ route('vendors.edit', $vendor->id) }}"
+                                        <a href="{{ route('invoices.edit', $invoice->id) }}"
                                             class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                                     </td>
                                 </tr>

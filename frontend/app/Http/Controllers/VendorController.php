@@ -86,7 +86,31 @@ class VendorController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id) {}
+    public function show(string $id)
+    {
+        try {
+            $vendors = collect($this->getAllVendors());
+            $singleVendor = $vendors->firstWhere('id', $id);
+            $corporateId = $singleVendor->corporate_id;
+
+            // Get All Vendor Invoices
+            $baseUrl = env('BASE_URL');
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer '.$this->getTokens(),
+            ])->get("$baseUrl/corporate/$corporateId/vendor/$id/invoice")->object();
+
+            $invoices = $response->data->invoices ?? [];
+
+            return view('vendors.show', [
+                'invoices' => $invoices,
+                'vendor' => $singleVendor
+            ]);
+
+        } catch (RequestException $e) {
+            return response()->json(['error' => 'Error occurred, please try again', 'exception' => $e->getMessage()], 500);
+        }
+    }
+    
 
     /**
      * Show the form for editing the specified resource.
@@ -139,7 +163,7 @@ class VendorController extends Controller
         } catch (RequestException $e) {
             return response()->json(['error' => 'Error occurred, please try again', 'exception' => $e->getMessage()], 500);
         }
-        
+
     }
 
     /**
