@@ -27,7 +27,7 @@ class InvoiceController extends Controller
                 'amount' => $validatedData['amount'],
                 'due_date' => $validatedData['due_date'],
                 'description' => $validatedData['description'] ?? null,
-                'status' => 'OPEN'
+                'status' => 'OPEN',
             ]);
             Cache::forget("corporate_{$corp_id}_vendor_{$vendor_id}_invoices");
             Log::info('Invoice created', ['id' => $invoice->id]);
@@ -36,6 +36,7 @@ class InvoiceController extends Controller
             return response()->json($invoice, 201);
         } catch (\Exception $e) {
             Log::error('Invoice creation failed', ['error' => $e->getMessage()]);
+
             return response()->json(['message' => 'Failed to create invoice'], 500);
         }
     }
@@ -45,7 +46,7 @@ class InvoiceController extends Controller
         try {
             $invoices = Cache::remember("corporate_{$corp_id}_vendor_{$vendor_id}_invoices", 3600, function () use ($corp_id, $vendor_id) {
                 return Invoice::where('corporate_id', $corp_id)
-                    ->where('vendor_id', $vendor_id)
+                    ->where('vendor_id', $vendor_id)->latest()
                     ->get();
             });
 
@@ -109,6 +110,7 @@ class InvoiceController extends Controller
             return response()->json($invoice);
         } catch (\Exception $e) {
             Log::error('Invoice update failed', ['id' => $invoice_id, 'error' => $e->getMessage()]);
+
             return response()->json(['message' => 'Failed to update invoice'], 500);
         }
     }

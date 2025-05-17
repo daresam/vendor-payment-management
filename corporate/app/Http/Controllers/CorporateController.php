@@ -47,7 +47,7 @@ class CorporateController extends Controller
     {
         try {
             $corporates = Cache::remember('corporates_list', 3600, function () {
-                return Corporate::all();
+                return Corporate::latest()->get();
             });
 
             if (empty($corporates)) {

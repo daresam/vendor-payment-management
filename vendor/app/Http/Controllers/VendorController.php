@@ -50,7 +50,7 @@ class VendorController extends Controller
     {
         try {
             $vendors = Cache::remember('vendors_list', 3600, function () {
-                return Vendor::all();
+                return Vendor::latest()->get();
             });
 
             // Return vendors directly for tests
