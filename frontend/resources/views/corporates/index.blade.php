@@ -33,7 +33,7 @@
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     <div class="flex items-center">
-                                        Address
+                                        Date Created
                                     </div>
                                 </th>
                                 <th scope="col" class="px-6 py-3">
@@ -63,7 +63,7 @@
                                         {{ $corporate->phone }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $corporate->address }}
+                                        {{ \Carbon\Carbon::parse($corporate->created_at)->format('D, d M Y h:i A')  }}
                                     </td>
                                     <td class="px-8 py-4 text-right">
                                         <a href="{{ route('corporates.show', $corporate->id) }}"

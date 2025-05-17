@@ -4,9 +4,7 @@ use App\Http\Controllers\CorporateController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::redirect('/', '/corporates');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -18,6 +16,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::resource('corporates', CorporateController::class)->middleware('auth');
+Route::resource('corporates', CorporateController::class);
 
-require __DIR__.'/auth.php';
+// require __DIR__.'/auth.php';
