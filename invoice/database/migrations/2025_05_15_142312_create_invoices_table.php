@@ -27,6 +27,10 @@ return new class extends Migration
                 $table->text('description')->nullable();
                 $table->timestamps();
                 $table->softDeletes();
+
+                // Add indexes for faster queries
+                $table->index('corporate_id');
+                $table->index('vendor_id');
             });
         }
     }
