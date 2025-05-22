@@ -9,21 +9,30 @@ use Illuminate\Support\Facades\Http;
 
 class InvoiceServiceController extends Controller
 {
-    public function index($corp_id, $vendor_id)
+    public function index(Request $request, $corp_id, $vendor_id)
     {
         try {
             $tokens = $this->getTokens();
 
-            if (!$tokens) {
+            if (! $tokens || empty($tokens->token)) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Failed to get tokens',
                 ], 500);
             }
 
+            // Build query parameters safely
+            $queryParams = array_filter([
+                'status' => $request->input('status'),
+                'due_date_from' => $request->input('due_date_from'),
+                'due_date_to' => $request->input('due_date_to'),
+                'overdue' => $request->input('overdue'),
+            ], fn ($v) => !is_null($v) && $v !== '');
+
+            $url = env('INVOICE_SERVICE_URL')."/corporate/{$corp_id}/vendor/{$vendor_id}/invoice";
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer '.$this->getTokens()->token,
-            ])->get(env('INVOICE_SERVICE_URL') . '/corporate/' .$corp_id . '/vendor/' . $vendor_id . '/invoice');
+                'Authorization' => "Bearer  $tokens->token",
+            ])->get($url, $queryParams);
 
             $data = [
                 'status' => 'success',
@@ -39,40 +48,11 @@ class InvoiceServiceController extends Controller
         }
     }
 
-    public function update(Request $request, $corp_id, $vendor_id, $invoice_id)
-    {
-        try {
-            $tokens = $this->getTokens();
-            if (!$tokens) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Failed to get tokens',
-                ], 500);
-            }
-
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer '.$this->getTokens()->token,
-            ])->put(env('INVOICE_SERVICE_URL') . '/corporate/' . $corp_id . '/vendor/' . $vendor_id . '/invoice/' . $invoice_id, $request->all());
-
-            $data = [
-                'status' => 'success',
-                'message' => 'Invoice updated successfully',
-                'data' => [
-                    'invoice' => $response->json(),
-                ],
-            ];
-
-            return response()->json($data);
-        } catch (\Illuminate\Http\Client\RequestException $e) {
-            return response()->json(['error' => 'Failed to connect', 'exception' => $e->getMessage()], 500);
-        }
-    }
-
     public function store(Request $request, $corp_id, $vendor_id)
     {
         try {
             $tokens = $this->getTokens();
-            if (!$tokens) {
+            if (! $tokens) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Failed to get tokens',
@@ -81,7 +61,7 @@ class InvoiceServiceController extends Controller
 
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer '.$this->getTokens()->token,
-            ])->post(env('INVOICE_SERVICE_URL') . '/corporate/' .$corp_id . '/vendor/' . $vendor_id . '/invoice', $request->all());
+            ])->post(env('INVOICE_SERVICE_URL').'/corporate/'.$corp_id.'/vendor/'.$vendor_id.'/invoice', $request->all());
 
             $data = [
                 'status' => 'success',
@@ -97,11 +77,13 @@ class InvoiceServiceController extends Controller
         }
     }
 
-    public function show($corp_id, $vendor_id, $invoice_id)
+    // TODO: Bulk Create Invoice
+
+    public function update(Request $request, $corp_id, $vendor_id, $invoice_id)
     {
         try {
             $tokens = $this->getTokens();
-            if (!$tokens) {
+            if (! $tokens) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Failed to get tokens',
@@ -110,7 +92,36 @@ class InvoiceServiceController extends Controller
 
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer '.$this->getTokens()->token,
-            ])->get(env('INVOICE_SERVICE_URL') . '/corporate/' . $corp_id . '/vendor/' . $vendor_id . '/invoice/' . $invoice_id);
+            ])->put(env('INVOICE_SERVICE_URL').'/corporate/'.$corp_id.'/vendor/'.$vendor_id.'/invoice/'.$invoice_id, $request->all());
+
+            $data = [
+                'status' => 'success',
+                'message' => 'Invoice updated successfully',
+                'data' => [
+                    'invoice' => $response->json(),
+                ],
+            ];
+
+            return response()->json($data);
+        } catch (\Illuminate\Http\Client\RequestException $e) {
+            return response()->json(['error' => 'Failed to connect', 'exception' => $e->getMessage()], 500);
+        }
+    }
+
+    public function show($corp_id, $vendor_id, $invoice_id)
+    {
+        try {
+            $tokens = $this->getTokens();
+            if (! $tokens) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Failed to get tokens',
+                ], 500);
+            }
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer '.$this->getTokens()->token,
+            ])->get(env('INVOICE_SERVICE_URL').'/corporate/'.$corp_id.'/vendor/'.$vendor_id.'/invoice/'.$invoice_id);
 
             $data = [
                 'status' => 'success',

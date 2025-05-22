@@ -101,6 +101,8 @@ class VendorController extends Controller
 
             $invoices = $response->data->invoices ?? [];
 
+            dd($invoices);
+
             return view('vendors.show', [
                 'invoices' => $invoices,
                 'vendor' => $singleVendor

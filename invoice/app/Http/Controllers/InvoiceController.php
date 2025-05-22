@@ -158,28 +158,25 @@ class InvoiceController extends Controller
         $validated['overdue'] = filter_var($validated['overdue'] ?? false, FILTER_VALIDATE_BOOLEAN);
 
         try {
-            $cacheKey = "corporate_{$corp_id}_vendor_{$vendor_id}_invoices_".md5(json_encode($validated));
-            $invoices = Cache::remember($cacheKey, 3600, function () use ($corp_id, $vendor_id, $validated) {
-                $query = Invoice::where('corporate_id', $corp_id)
-                    ->where('vendor_id', $vendor_id);
+            $query = Invoice::where('corporate_id', $corp_id)
+                ->where('vendor_id', $vendor_id);
 
-                if (isset($validated['status'])) {
-                    $query->where('status', $validated['status']);
-                }
-                if (isset($validated['due_date_from'])) {
-                    $query->whereDate('due_date', '>=', $validated['due_date_from']);
-                }
-                if (isset($validated['due_date_to'])) {
-                    $query->whereDate('due_date', '<=', $validated['due_date_to']);
-                }
-                if (isset($validated['overdue']) && $validated['overdue']) {
-                    $query->where('status', 'OPEN')->where('due_date', '<', now());
-                }
+            if (isset($validated['status'])) {
+                $query->where('status', $validated['status']);
+            }
+            if (isset($validated['due_date_from'])) {
+                $query->whereDate('due_date', '>=', $validated['due_date_from']);
+            }
+            if (isset($validated['due_date_to'])) {
+                $query->whereDate('due_date', '<=', $validated['due_date_to']);
+            }
+            if (isset($validated['overdue']) && $validated['overdue']) {
+                $query->where('status', 'OPEN')->where('due_date', '<', now());
+            }
 
-                return $query->get()->map(function ($invoice) {
-                    return array_merge($invoice->toArray(), ['is_overdue' => $invoice->isOverdue()]);
-                })->toArray();
-            });
+            $invoices = $query->get()->map(function ($invoice) {
+                return array_merge($invoice->toArray(), ['is_overdue' => $invoice->isOverdue()]);
+            })->toArray();
 
             return response()->json(['data' => $invoices]);
         } catch (\Exception $e) {
