@@ -14,9 +14,28 @@ class Invoice extends Model
         'corporate_id',
         'vendor_id',
         'invoice_number',
+        'quantity',
+        'rate',
         'amount',
         'status',
+        'issue_date',
         'due_date',
+        'payment_terms',
         'description',
     ];
+
+    protected $casts = [
+        'issue_date' => 'date',
+        'due_date' => 'date',
+    ];
+
+    public function calculateAmount(): float|int
+    {
+        return $this->quantity * $this->rate;
+    }
+
+    public function isOverdue(): bool
+    {
+        return $this->status === 'OPEN' && now()->gt($this->due_date);
+    }
 }

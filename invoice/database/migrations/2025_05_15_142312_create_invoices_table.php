@@ -11,18 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('invoices', function (Blueprint $table) {
-            $table->id();
-            $table->integer('corporate_id');
-            $table->integer('vendor_id');
-            $table->string('invoice_number')->unique();
-            $table->decimal('amount', 10, 2);
-            $table->enum('status', ['OPEN', 'CLOSED'])->default('OPEN');
-            $table->date('due_date');
-            $table->text('description')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
-        });
+        if (! Schema::hasTable('invoices')) {
+            Schema::create('invoices', function (Blueprint $table) {
+                $table->id();
+                $table->integer('corporate_id');
+                $table->integer('vendor_id');
+                $table->string('invoice_number')->unique();
+                $table->integer('quantity')->default(1);
+                $table->decimal('rate', 10, 2);
+                $table->decimal('amount', 10, 2); // Total cost: quantity * rate
+                $table->enum('status', ['OPEN', 'CLOSED'])->default('OPEN');
+                $table->date('issue_date'); // Date invoice is issued
+                $table->date('due_date'); // Due date based on payment terms
+                $table->string('payment_terms')->default('Net 30'); // e.g., Net 7, Net 14, Net 30
+                $table->text('description')->nullable();
+                $table->timestamps();
+                $table->softDeletes();
+            });
+        }
     }
 
     /**

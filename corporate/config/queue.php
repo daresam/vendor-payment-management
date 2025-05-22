@@ -91,11 +91,14 @@ return [
                     'verify_peer' => env('RABBITMQ_SSL_VERIFY_PEER', true),
                     'passphrase' => env('RABBITMQ_SSL_PASSPHRASE', null),
                 ],
+                'exchange' => [
+                    'name' => 'corporate_exchange',
+                    'type' => 'direct',
+                    'durable' => true,
+                ],
                 'queue' => [
-                    // 'job' => App\Jobs\CustomRabbitMQ::class,
-                    // 'exchange' => 'order_placed',
-                    // 'exchange_type' => 'topic',
-                    // 'exchange_routing_key' => 'product.update.stock'
+                    'durable' => true,
+                    'auto_delete' => false,
                 ],
             ],
             /*

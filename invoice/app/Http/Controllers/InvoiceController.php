@@ -7,10 +7,61 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class InvoiceController extends Controller
 {
     public function store(Request $request, $corp_id, $vendor_id)
+    {
+        // $corporate = ;
+        // $vendor = ;
+
+        // Validate $corp_id, $vendor_id
+
+        $validated = $request->validate([
+            'quantity' => 'required|integer|min:1',
+            'rate' => 'required|numeric|min:0.01',
+            'issue_date' => 'required|date|before_or_equal:today',
+            'payment_terms' => 'required|in:Net 7,Net 14,Net 30',
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        try {
+            DB::beginTransaction();
+            $dueDate = Carbon::parse($validated['issue_date'])->addDays(
+                match ($validated['payment_terms']) {
+                    'Net 7' => 7,
+                    'Net 14' => 14,
+                    'Net 30' => 30,
+                }
+            );
+
+            $invoice = Invoice::create([
+                'corporate_id' => $corp_id,
+                'vendor_id' => $vendor_id,
+                'invoice_number' => 'INV-' . Str::random(8),
+                'quantity' => $validated['quantity'],
+                'rate' => $validated['rate'],
+                'amount' => $validated['quantity'] * $validated['rate'],
+                'issue_date' => $validated['issue_date'],
+                'due_date' => $dueDate,
+                'payment_terms' => $validated['payment_terms'],
+                'description' => $validated['description'] || '',
+                'status' => 'OPEN',
+            ]);
+            Cache::forget("corporate_{$corp_id}_vendor_{$vendor_id}_invoices");
+            Log::info('Invoice created', ['id' => $invoice->id]);
+            DB::commit();
+            return response()->json(['data' => $invoice], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Invoice creation failed', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Failed to create invoice'], 500);
+        }
+    }
+
+    public function store2(Request $request, $corp_id, $vendor_id)
     {
         $validatedData = $request->validate([
             'amount' => 'required|numeric|min:0',
