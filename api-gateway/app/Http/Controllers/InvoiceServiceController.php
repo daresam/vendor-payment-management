@@ -14,7 +14,7 @@ class InvoiceServiceController extends Controller
         try {
             $tokens = $this->getTokens();
 
-            if (! $tokens || empty($tokens->token)) {
+            if (!$tokens || empty($tokens->token)) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Failed to get tokens',
@@ -27,7 +27,7 @@ class InvoiceServiceController extends Controller
                 'due_date_from' => $request->input('due_date_from'),
                 'due_date_to' => $request->input('due_date_to'),
                 'overdue' => $request->input('overdue'),
-            ], fn ($v) => !is_null($v) && $v !== '');
+            ], fn ($v) => ! is_null($v) && $v !== '');
 
             $url = env('INVOICE_SERVICE_URL')."/corporate/{$corp_id}/vendor/{$vendor_id}/invoice";
             $response = Http::withHeaders([
@@ -38,7 +38,7 @@ class InvoiceServiceController extends Controller
                 'status' => 'success',
                 'message' => 'Invoices fetched successfully',
                 'data' => [
-                    'invoices' => $response->json(),
+                    'invoices' => $response->json()['data'],
                 ],
             ];
 
@@ -52,7 +52,7 @@ class InvoiceServiceController extends Controller
     {
         try {
             $tokens = $this->getTokens();
-            if (! $tokens) {
+            if (!$tokens) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Failed to get tokens',
@@ -67,7 +67,7 @@ class InvoiceServiceController extends Controller
                 'status' => 'success',
                 'message' => 'Invoice created successfully',
                 'data' => [
-                    'invoice' => $response->json(),
+                    'invoice' => $response->json()['data'],
                 ],
             ];
 
@@ -77,13 +77,40 @@ class InvoiceServiceController extends Controller
         }
     }
 
-    // TODO: Bulk Create Invoice
+    public function bulkStore(Request $request, $corp_id)
+    {
+        try {
+            $tokens = $this->getTokens();
+            if (!$tokens) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Failed to get tokens',
+                ], 500);
+            }
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer '.$this->getTokens()->token,
+            ])->post(env('INVOICE_SERVICE_URL').'/corporate/'.$corp_id.'/invoices/bulk', $request->all());
+
+            $data = [
+                'status' => 'success',
+                'message' => 'Invoice created successfully',
+                'data' => [
+                    'invoice' => $response->json()['data'],
+                ],
+            ];
+
+            return response()->json($data, 201);
+        } catch (\Illuminate\Http\Client\RequestException $e) {
+            return response()->json(['error' => 'Failed to connect', 'exception' => $e->getMessage()], 500);
+        }
+    }
 
     public function update(Request $request, $corp_id, $vendor_id, $invoice_id)
     {
         try {
             $tokens = $this->getTokens();
-            if (! $tokens) {
+            if (!$tokens) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Failed to get tokens',
@@ -94,15 +121,21 @@ class InvoiceServiceController extends Controller
                 'Authorization' => 'Bearer '.$this->getTokens()->token,
             ])->put(env('INVOICE_SERVICE_URL').'/corporate/'.$corp_id.'/vendor/'.$vendor_id.'/invoice/'.$invoice_id, $request->all());
 
-            $data = [
+
+            $dataResponse = $response->json();
+            if (isset($dataResponse['status']) && $dataResponse['status'] === 'error') {
+                return response()->json($dataResponse, 400);
+            }
+
+            $dataResponse = [
                 'status' => 'success',
                 'message' => 'Invoice updated successfully',
                 'data' => [
-                    'invoice' => $response->json(),
+                    'invoice' => $response->json()['data'],
                 ],
             ];
 
-            return response()->json($data);
+            return response()->json($dataResponse);
         } catch (\Illuminate\Http\Client\RequestException $e) {
             return response()->json(['error' => 'Failed to connect', 'exception' => $e->getMessage()], 500);
         }
@@ -127,7 +160,7 @@ class InvoiceServiceController extends Controller
                 'status' => 'success',
                 'message' => 'Invoice fetched successfully',
                 'data' => [
-                    'invoice' => $response->json(),
+                    'invoice' => $response->json()['data'],
                 ],
             ];
 

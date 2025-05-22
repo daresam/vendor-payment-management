@@ -33,6 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Invoice Routes
     Route::post('/corporate/{corp_id}/vendor/{vendor_id}/invoice', [InvoiceServiceController::class, 'store']);
+    Route::post('/corporate/{corp_id}/invoices/bulk', [InvoiceServiceController::class, 'bulkStore']);
     Route::get('/corporate/{corp_id}/vendor/{vendor_id}/invoice', [InvoiceServiceController::class, 'index']);
     Route::get('/corporate/{corp_id}/vendor/{vendor_id}/invoice/{invoice_id}', [InvoiceServiceController::class, 'show']);
     Route::put('/corporate/{corp_id}/vendor/{vendor_id}/invoice/{invoice_id}', [InvoiceServiceController::class, 'update']);
