@@ -12,7 +12,6 @@ class CorporateController extends Controller
 {
     public function store(Request $request)
     {
-
         $validated = Validator::make($request->all(), [
             'name' => 'required|string|max:255|unique:corporates',
             'email' => 'required|email|unique:corporates',
@@ -23,7 +22,7 @@ class CorporateController extends Controller
         if ($validated->fails()) {
             return response()->json([
                 'message' => 'The given data was invalid.',
-                'errors' => $validated->errors()
+                'errors' => $validated->errors(),
             ], 422);
         }
 

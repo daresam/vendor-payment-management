@@ -92,13 +92,16 @@ return [
                     'passphrase' => env('RABBITMQ_SSL_PASSPHRASE', null),
                 ],
                 'exchange' => [
-                    'name' => 'invoice_exchange',
+                    'name' => 'corporate_exchange',
                     'type' => 'direct',
                     'durable' => true,
+                    'auto_delete' => false,
                 ],
                 'queue' => [
+                    'name' => 'corporate_request_queue',
                     'durable' => true,
                     'auto_delete' => false,
+                    'routing_key' => 'corporate_request_queue',
                 ],
             ],
             /*

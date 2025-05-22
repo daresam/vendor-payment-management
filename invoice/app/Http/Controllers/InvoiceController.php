@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Invoice;
+use App\Services\CorporateService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -12,10 +13,25 @@ use Carbon\Carbon;
 
 class InvoiceController extends Controller
 {
+    protected $corporateService;
+
+    public function __construct(CorporateService $corporateService)
+    {
+        $this->corporateService = $corporateService;
+    }
+    
     public function store(Request $request, $corp_id, $vendor_id)
     {
-        // $corporate = ;
-        // $vendor = ;
+
+        // Validate $corp_id, $vendor_id
+        // try {
+        //     $corporate = $this->corporateService->getCorporate($corp_id);
+        //     return response()->json(['data' => $corporate], 201);
+            
+        // } catch (\Exception $e) {
+        //     Log::error('Failed to fetch corporate', ['corp_id' => $corp_id, 'error' => $e->getMessage()]);
+        //     return response()->json(['error' => $e->getMessage()], $e->getCode() ?: 500);
+        // }
 
         // Validate $corp_id, $vendor_id
 
@@ -29,6 +45,7 @@ class InvoiceController extends Controller
 
         try {
             DB::beginTransaction();
+            
             $dueDate = Carbon::parse($validated['issue_date'])->addDays(
                 match ($validated['payment_terms']) {
                     'Net 7' => 7,
