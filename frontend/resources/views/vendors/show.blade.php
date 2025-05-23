@@ -15,11 +15,50 @@
                                 class="bg-gray-50 dark:bg-gray-700 text-white px-4 py-2 rounded">
                                 Back</a>
                         </div>
-                        <div class="mt-2 p-5 flex flex-row-reverse">
-                            <a href="{{ route('create.invoice', $vendor->id) }}"
-                                class="bg-gray-50 dark:bg-gray-700 text-white px-4 py-2 rounded">Create
-                                Invoice</a>
+
+                        <div class=" align-items-start flex  justify-start ">
+                            <form action="{{route('filter.invoice', $vendor->id)}}" method="GET" class="mb-4 mt-4">
+                                <div class="flex space-x-4">
+                                    <div>
+                                        <label class="block font-medium text-sm text-gray-700">Status</label>
+                                        <select name="status"
+                                            class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full p-2 border">
+                                            <option value="">All</option>
+                                            <option value="OPEN">Open</option>
+                                            <option value="CLOSED">Closed</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block font-medium text-sm text-gray-700">Due Date From</label>
+                                        <input type="date" name="due_date_from"
+                                            class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full p-2 border">
+                                    </div>
+                                    <div>
+                                        <label class="block font-medium text-sm text-gray-700">Due Date To</label>
+                                        <input type="date" name="due_date_to"
+                                            class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full p-2 border">
+                                    </div>
+                                    <div>
+                                        <label class="block font-medium text-sm text-gray-700">Overdue</label>
+                                        <input type="checkbox" name="overdue" value="1">
+                                    </div>
+                                    <button type="submit"
+                                        class="bg-blue-500 text-white px-5 py-1 rounded">Filter</button>
+                                </div>
+                            </form>
                         </div>
+
+
+                        <div class="mt-2 p-5 flex flex-row-reverse">
+                            <a href="{{ route('create.bulkInvoice', $vendor->corporate_id) }}"
+                                class="bg-gray-50 dark:bg-orange-700 text-white mx-10 px-4 py-2 rounded">Create Bulk
+                                Invoice</a>
+                            <a href="{{ route('create.invoice', $vendor->id) }}"
+                                class="  bg-gray-50 dark:bg-gray-700 text-white px-4 py-2 rounded">Create
+                                Invoice</a>
+
+                        </div>
+                        {{-- Table --}}
                         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                 <thead
@@ -27,6 +66,16 @@
                                     <tr>
                                         <th scope="col" class="px-6 py-3">
                                             Invoice Number
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            <div class="flex items-center">
+                                                Quantity
+                                            </div>
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            <div class="flex items-center">
+                                                Rate
+                                            </div>
                                         </th>
                                         <th scope="col" class="px-6 py-3">
                                             <div class="flex items-center">
@@ -38,9 +87,15 @@
                                                 Status
                                             </div>
                                         </th>
+
                                         <th scope="col" class="px-6 py-3">
                                             <div class="flex items-center">
                                                 Due Date
+                                            </div>
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            <div class="flex items-center">
+                                                Overdue
                                             </div>
                                         </th>
                                         <th scope="col" class="px-6 py-3">
@@ -64,13 +119,24 @@
                                                 {{ $invoice->invoice_number }}
                                             </th>
                                             <td class="px-6 py-4">
+                                                {{ $invoice->quantity }}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{ $invoice->rate }}
+                                            </td>
+                                            <td class="px-6 py-4">
                                                 {{ $invoice->amount }}
                                             </td>
                                             <td class="px-6 py-4">
                                                 {{ $invoice->status }}
                                             </td>
+
                                             <td class="px-6 py-4">
-                                                {{ \Carbon\Carbon::parse($invoice->due_date)->format('D, d M Y h:i A')  }}
+                                                {{ \Carbon\Carbon::parse($invoice->due_date)->format('D, d M Y')  }}
+                                            </td>
+
+                                            <td class="px-6 py-4">
+                                                {{ $invoice->is_overdue ? 'Yes' : 'No' }}
                                             </td>
                                             <td class="px-8 py-4 text-right">
                                                 <a href="{{ route('show.invoice', ['id' => $invoice->id, 'vendorId' => $invoice->vendor_id]) }}"

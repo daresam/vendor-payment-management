@@ -174,7 +174,7 @@ class InvoiceController extends Controller
                 $query->where('status', 'OPEN')->where('due_date', '<', now());
             }
 
-            $invoices = $query->get()->map(function ($invoice) {
+            $invoices = $query->latest()->get()->map(function ($invoice) {
                 return array_merge($invoice->toArray(), ['is_overdue' => $invoice->isOverdue()]);
             })->toArray();
 

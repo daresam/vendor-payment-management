@@ -99,9 +99,9 @@ class VendorController extends Controller
                 'Authorization' => 'Bearer '.$this->getTokens(),
             ])->get("$baseUrl/corporate/$corporateId/vendor/$id/invoice")->object();
 
+
             $invoices = $response->data->invoices ?? [];
 
-            dd($invoices);
 
             return view('vendors.show', [
                 'invoices' => $invoices,
@@ -168,49 +168,4 @@ class VendorController extends Controller
 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
-
-    public function getAllVendors()
-    {
-
-        try {
-
-            $baseUrl = env('BASE_URL');
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer '.$this->getTokens(),
-            ])->get("$baseUrl/corporate/vendor")->object();
-
-            $vendors = $response->data->vendors ?? [];
-
-            return $vendors;
-        } catch (RequestException $e) {
-            return response()->json(['error' => 'Error occurred, please try again', 'exception' => $e->getMessage()], 500);
-        }
-
-    }
-
-    public function getAllCorporates()
-    {
-
-        try {
-
-            $baseUrl = env('BASE_URL');
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer '.$this->getTokens(),
-            ])->get("$baseUrl/corporate")->object();
-
-            $corporates = $response->data->corporates ?? [];
-
-            return $corporates;
-        } catch (RequestException $e) {
-            return response()->json(['error' => 'Error occurred, please try again', 'exception' => $e->getMessage()], 500);
-        }
-
-    }
 }

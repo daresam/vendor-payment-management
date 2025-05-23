@@ -3,6 +3,7 @@
 namespace App\Trait;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\RequestException;
 
 trait AccessToken
 {
@@ -22,5 +23,43 @@ trait AccessToken
         }
 
         return $accessToken;
+    }
+
+    public function getAllVendors()
+    {
+
+        try {
+
+            $baseUrl = env('BASE_URL');
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer '.$this->getTokens(),
+            ])->get("$baseUrl/corporate/vendor")->object();
+
+            $vendors = $response->data->vendors ?? [];
+
+            return $vendors;
+        } catch (RequestException $e) {
+            return response()->json(['error' => 'Error occurred, please try again', 'exception' => $e->getMessage()], 500);
+        }
+
+    }
+
+    public function getAllCorporates()
+    {
+
+        try {
+
+            $baseUrl = env('BASE_URL');
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer '.$this->getTokens(),
+            ])->get("$baseUrl/corporate")->object();
+
+            $corporates = $response->data->corporates ?? [];
+
+            return $corporates;
+        } catch (RequestException $e) {
+            return response()->json(['error' => 'Error occurred, please try again', 'exception' => $e->getMessage()], 500);
+        }
+
     }
 }
