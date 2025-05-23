@@ -35,7 +35,7 @@ invoice and finally marking an invoice as paid. The application leverages variou
 
 - **Laravel Framework**: A PHP framework for building web applications.
 - **Laravel Sanctum**: Provides token-based authentication for API security.
-- **Laravel Sail**: For bootstrappi g the.
+- **Laravel Sail**: Sail provides a great starting point for building a Laravel application using PHP, MySQL, and Redis without requiring prior Docker experience
 - **RabbitMQ**: Message broker for asynchronous task handling.
 - **Docker**: Containerization for consistent development environments.
 
@@ -54,7 +54,7 @@ To start the microservice application:
 2. Navigate to each of the following directories(api-gateway, corporate, vendor and invoice )
 3. Run `./vendor/bin/sail up -d` to start the containers for each services.
 4. Run `./vendor/bin/sail artisan migrate` to run migration for each services
-5. Run `./vendor/bin/sail artisan db:seed` to run migration for each services
+5. Run `./vendor/bin/sail artisan db:seed` to run seed data for each services
 6. Navigate to Start rabbitmq by running `docker compose up`.
 7. Test the application using Postman, and connect to the database using your preferred tool (ensure the correct database port is used).
 
