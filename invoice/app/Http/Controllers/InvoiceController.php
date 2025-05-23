@@ -25,16 +25,7 @@ class InvoiceController extends Controller
     {
 
         // TODO: Validate $corp_id, $vendor_id
-        // try {
-        //     $corporate = $this->corporateService->getCorporate($corp_id);
-        //     return response()->json(['data' => $corporate], 201);
-
-        // } catch (\Exception $e) {
-        //     Log::error('Failed to fetch corporate', ['corp_id' => $corp_id, 'error' => $e->getMessage()]);
-        //     return response()->json(['error' => $e->getMessage()], $e->getCode() ?: 500);
-        // }
-
-        // Validate $corp_id, $vendor_id
+        
 
         $validated = $request->validate([
             'quantity' => 'required|integer|min:1',
