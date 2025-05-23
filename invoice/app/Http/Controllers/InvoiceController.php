@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Invoice;
-use App\Services\CorporateService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -14,12 +13,6 @@ use Illuminate\Validation\ValidationException;
 
 class InvoiceController extends Controller
 {
-    protected $corporateService;
-
-    public function __construct(CorporateService $corporateService)
-    {
-        $this->corporateService = $corporateService;
-    }
 
     public function store(Request $request, $corp_id, $vendor_id)
     {
