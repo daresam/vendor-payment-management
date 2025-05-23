@@ -23,10 +23,6 @@ class InvoiceController extends Controller
 
     public function store(Request $request, $corp_id, $vendor_id)
     {
-
-        // TODO: Validate $corp_id, $vendor_id
-        
-
         $validated = $request->validate([
             'quantity' => 'required|integer|min:1',
             'rate' => 'required|numeric|min:0.01',
@@ -82,7 +78,6 @@ class InvoiceController extends Controller
 
     public function bulkStore(Request $request, $corp_id)
     {
-        // TODO: Validate $corp_id
 
         $validated = $request->validate([
             'invoices' => 'required|array|min:1',
@@ -136,7 +131,6 @@ class InvoiceController extends Controller
 
     public function index(Request $request, $corp_id, $vendor_id)
     {
-        // TODO: Validate corp_id and vendor_id
 
         $validated = $request->validate([
             'status' => 'nullable|in:OPEN,CLOSED',
@@ -179,7 +173,7 @@ class InvoiceController extends Controller
 
     public function show($corp_id, $vendor_id, $invoice_id)
     {
-        // TODO: Validate corp_id and vendor_id
+
         try {
             $invoice_i = Cache::remember("invoice_{$invoice_id}", 3600, function () use ($invoice_id, $corp_id, $vendor_id) {
                 return Invoice::where('corporate_id', $corp_id)
@@ -197,7 +191,6 @@ class InvoiceController extends Controller
 
     public function update(Request $request, $corp_id, $vendor_id, $invoice_id)
     {
-        // TODO: Validate corp_id and vendor_id
 
         $validated = $request->validate([
             'status' => 'required|in:OPEN,CLOSED',
